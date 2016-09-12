@@ -1,0 +1,103 @@
+version: '2'
+
+services:
+
+### Core Workspace ###
+    core:
+        build:
+            context: ./docker/core
+            args:
+                - INSTALL_XDEBUG=false
+                - INSTALL_DRUSH=false
+                - PUID=1000
+                - PGID=1000
+        volumes_from:
+            - volumes_source
+        ports:
+           - "22:22"
+        tty: true
+
+### PHP-FPM  ###
+
+    php-fpm:
+        build:
+            context: ./docker/php-fpm/php56
+#            context: ./php-fpm/php7
+#            args:
+#                - INSTALL_XDEBUG=true
+        volumes_from:
+            - volumes_source
+        expose:
+            - "9000"
+        links:
+            - core
+
+#### Apache ###
+
+    apache2:
+        build:
+            context: ./docker/apache2
+            args:
+                - PHP_SOCKET="php-fpm:9000"
+                - WEB_DOCUMENT_ROOT="/var/www/"
+        volumes_from:
+            - volumes_source
+        volumes:
+            - ./logs/apache2:/var/log/apache2
+        ports:
+            - "8080:80"
+            - "443:443"
+        links:
+            - php-fpm
+
+#### Nginx ####
+
+    nginx:
+        build:
+            context: ./docker/nginx
+            args:
+                - PHP_UPSTREAM=php-fpm:9000
+        volumes_from:
+            - volumes_source
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+        ports:
+            - "81:80"
+            - "443:443"
+        links:
+            - php-fpm
+### MySQL ###
+
+    mysql:
+        build:
+            context: ./docker/mysql/5.7
+        volumes_from:
+            - volumes_data
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: test
+            MYSQL_USER: maju
+            MYSQL_PASSWORD: 1234maju
+            MYSQL_ROOT_PASSWORD: 1234maju
+
+#### Web source ###
+
+    volumes_source:
+        image: tianon/true
+        volumes:
+            - ../:/var/www/
+            # Demonstration of how to mount multiple sites
+            # - ../../site_a/:/var/www/site_a
+            # - ../../site_b/:/var/www/site_b
+
+###  Data source ###
+
+    volumes_data:
+        image: tianon/true
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+            - ./data/memcached:/var/lib/memcached
+            - ./data/redis:/data
+            - ./data/sessions:/sessions
+

@@ -1,0 +1,62 @@
+FROM ubuntu:16.04
+
+MAINTAINER Maju Ansari
+
+#
+# Set environment variables
+#
+ENV DEBIAN_FRONTEND=noninteractive
+
+#
+# User
+#
+RUN groupmod -g 1000 www-data && \
+    usermod -u 1000 www-data
+
+#
+# APT packages
+#
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    vim
+
+
+RUN rm -rf /var/lib/apt/lists/*
+
+#
+# Configuration
+#
+RUN rm /etc/apache2/sites-enabled/* && \
+    rm /etc/apache2/sites-available/*
+
+
+RUN a2dismod mpm_event && \
+    a2enmod deflate headers macro mpm_worker proxy proxy_fcgi rewrite ssl vhost_alias
+
+
+
+ARG WEB_DOCUMENT_ROOT="/var/www/"
+ENV APACHE_WEB_DOCUMENT_ROOT = $WEB_DOCUMENT_ROOT
+
+ARG PHP_SOCKET="php-fpm:9000"
+ENV APACHE_WEB_PHP_SOCKET=$PHP_SOCKET
+
+
+ADD ./config/default.conf /etc/apache2/sites-available/
+RUN a2ensite default
+
+ADD ./config/test.conf /etc/apache2/sites-available/
+RUN a2ensite test.conf
+
+#
+# Reset environment variables
+#
+ENV DEBIAN_FRONTEND=
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+#
+# Command
+#
+CMD ["apache2ctl", "-D", "FOREGROUND"]
