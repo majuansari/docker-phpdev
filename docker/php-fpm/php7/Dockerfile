@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Maju Ansari
+MAINTAINER Chris Fidao
 
 RUN locale-gen en_US.UTF-8
 
@@ -26,15 +26,24 @@ RUN apt-get update \
 #
 
 
+#
+# Configuration
+#
+COPY ./conf/www.conf /etc/php/7.0/fpm/pool.d/www.conf
+COPY ./conf/php.ini /etc/php/7.0/mods-available/php.ini
 
-ADD ./conf/phpdev.ini /usr/local/etc/php5.6/conf.d
-ADD ./conf/phpdev.pool.conf /usr/local/etc/ph5.6-fpm.d/
-#COPY ./app/ /var/www
-RUN usermod -u 1000 www-data
+RUN ln -s /etc/php/7.0/mods-available/php.ini /etc/php/7.0/cli/conf.d/90-php.ini && \
+    ln -s /etc/php/7.0/mods-available/php.ini /etc/php/7.0/fpm/conf.d/90-php.ini && \
+    mkdir -p /run/php
+
+RUN cat /etc/php/7.0/fpm/pool.d/www.conf
+# Configure FPM to run properly on docker
+RUN  usermod -u 1000 www-data
+RUN ls
+RUN cat /etc/php/7.0/fpm/pool.d/www.conf
 
 WORKDIR /var/www/
 
-
-CMD ["/bash"]
+CMD ["php-fpm7.0"]
 
 EXPOSE 9000

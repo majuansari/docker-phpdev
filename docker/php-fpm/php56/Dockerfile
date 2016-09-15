@@ -46,6 +46,4 @@ CMD ["php-fpm5.6"]
 
 EXPOSE 9000
 
-RUN ls /usr/local/etc/
-RUN ls /etc/php/5.6/fpm/php-fpm.conf
 

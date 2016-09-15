@@ -56,7 +56,13 @@ ENV DEBIAN_FRONTEND=
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN echo "export APACHE_WEB_PHP_SOCKET='php-fpm:9000'" >> "/etc/apache2/envvars"
+RUN echo "export APACHE_WEB_DOCUMENT_ROOT='/var/www'" >> "/etc/apache2/envvars"
+
 #
 # Command
 #
+
 CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+
