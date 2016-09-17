@@ -118,7 +118,8 @@ services:
 
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+        build:
+            context: ./docker/phpmyadmin
         environment:
             - PMA_ARBITRARY=1
         restart: always
