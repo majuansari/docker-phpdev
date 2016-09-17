@@ -4,7 +4,7 @@
 #--------------------------------------------------------------------------
 #
 
-FROM phusion/baseimage:latest
+FROM ubuntu:16.04
 
 MAINTAINER Maju Ansari <majjansari@gmail.com>
 
@@ -29,39 +29,18 @@ RUN apt-get update && \
 #
 
 # Install "PHP Extentions", "libraries", "Software's"
-RUN apt-get install -y --force-yes \
+RUN apt-get install -y --force-yes --no-install-recommends \
         php7.0-cli \
-        php7.0-common \
         php7.0-curl \
-        php7.0-json \
-        php7.0-xml \
-        php7.0-mbstring \
-        php7.0-mcrypt \
-        php7.0-mysql \
-        php7.0-pgsql \
-        php7.0-sqlite \
-        php7.0-sqlite3 \
-        php7.0-zip \
-        php-memcached \
-        php7.0-gd \
-        pkg-config \
-        php-dev \
-        libcurl4-openssl-dev \
-        libedit-dev \
-        libssl-dev \
-        libxml2-dev \
-        xz-utils \
-        libsqlite3-dev \
-        sqlite3 \
         git \
         curl \
         vim \
         nano \
-        postgresql-client \
         nodejs\
         npm\
-    && apt-get clean
-
+        wget\
+        zip \
+        unzip
 #####################################
 # Composer:
 #####################################
@@ -69,34 +48,18 @@ RUN apt-get install -y --force-yes \
 # Install composer and add its bin to the PATH.
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#####################################
-# xDebug:
-#####################################
-
-# Check if xDebug needs to be installed
-ARG INSTALL_XDEBUG=true
-ENV INSTALL_XDEBUG ${INSTALL_XDEBUG}
-RUN if [ ${INSTALL_XDEBUG} = true ]; then \
-    # Load the xdebug extension only with phpunit commands
-    apt-get update && \
-    apt-get install -y --force-yes php7.0-xdebug && \
-    sed -i 's/^/;/g' /etc/php/7.0/cli/conf.d/20-xdebug.ini\
-;fi
-# ADD for REMOTE debugging
-COPY ./xdebug.ini /etc/php/7.0/cli/conf.d/xdebug.ini
-
 # Add a non-root user to prevent files being created with root permissions on host machine.
 ARG PUID=1000
 ARG PGID=1000
-RUN groupadd -g $PGID phpdev && \
-    useradd -u $PUID -g phpdev -m phpdev
+RUN groupadd -g $PGID dev && \
+    useradd -u $PUID -g dev -m dev
 
 #####################################
 # Drush:
 #####################################
 USER root
 ENV DRUSH_VERSION 8.1.2
-ARG INSTALL_DRUSH=true
+ARG INSTALL_DRUSH=FALSE
 ENV INSTALL_DRUSH ${INSTALL_DRUSH}
 RUN if [ ${INSTALL_DRUSH} = true ]; then \
     # Install Drush 8 with the phar file.
@@ -107,14 +70,35 @@ RUN if [ ${INSTALL_DRUSH} = true ]; then \
 
 #
 #--------------------------------------------------------------------------
-# Final Touch
+# Install sonar runner
 #--------------------------------------------------------------------------
 #
 
+
+WORKDIR /usr/local
+ENV PATH /usr/local/sonar-runner-2.4/bin:$PATH
+
+ARG INSTALL_RUNNER=FALSE
+ENV INSTALL_RUNNER ${INSTALL_RUNNER}
+RUN if [ ${INSTALL_RUNNER} = true ]; then \
+RUN wget http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist/2.4/sonar-runner-dist-2.4.zip && \
+    unzip sonar-runner-dist-2.4.zip && \
+    rm sonar-runner-dist-2.4.zip \
+    && apt-get install -y --no-install-recommends \
+	default-jdk \
+	default-jre \
+;fi
+
 # Clean up
 USER root
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set default work directory
 WORKDIR /var/www/
+
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

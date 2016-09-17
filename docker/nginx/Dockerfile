@@ -17,9 +17,14 @@ ARG PHP_UPSTREAM=php-fpm:9000
 
 RUN echo "upstream php-upstream { server ${PHP_UPSTREAM}; }" > /etc/nginx/conf.d/upstream.conf
 
-RUN apt-get clean \
-        && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-
 CMD ["nginx"]
 
 EXPOSE 81 443
+
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

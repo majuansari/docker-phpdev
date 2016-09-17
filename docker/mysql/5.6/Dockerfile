@@ -53,9 +53,6 @@ RUN { \
 	&& chmod 777 /var/run/mysqld
 
 
-
-VOLUME /var/lib/mysql
-
 VOLUME /var/lib/mysql
 ENV MYSQL_DATADIR '/var/lib/mysql'
 
@@ -67,3 +64,11 @@ COPY ./conf/my.cnf /usr/share/mysql/my-default.cnf
 
 EXPOSE 3306
 CMD ["mysqld"]
+
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

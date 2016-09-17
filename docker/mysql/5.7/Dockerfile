@@ -69,3 +69,10 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 3306
 CMD ["mysqld"]
 
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

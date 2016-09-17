@@ -15,16 +15,7 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y php7.0-fpm php7.0-cli php7.0-mcrypt php7.0-gd php7.0-mysql \
        php7.0-pgsql php7.0-imap php-memcached php7.0-mbstring php7.0-xml \
-    && apt-get remove -y --purge software-properties-common \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-#
-#--------------------------------------------------------------------------
-# Final Touch
-#--------------------------------------------------------------------------
-#
-
+    && apt-get remove -y --purge software-properties-common
 
 #
 # Configuration
@@ -36,14 +27,19 @@ RUN ln -s /etc/php/7.0/mods-available/php.ini /etc/php/7.0/cli/conf.d/90-php.ini
     ln -s /etc/php/7.0/mods-available/php.ini /etc/php/7.0/fpm/conf.d/90-php.ini && \
     mkdir -p /run/php
 
-RUN cat /etc/php/7.0/fpm/pool.d/www.conf
 # Configure FPM to run properly on docker
 RUN  usermod -u 1000 www-data
-RUN ls
-RUN cat /etc/php/7.0/fpm/pool.d/www.conf
 
 WORKDIR /var/www/
 
 CMD ["php-fpm7.0"]
 
 EXPOSE 9000
+
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

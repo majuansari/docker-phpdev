@@ -20,13 +20,6 @@ RUN apt-get install -y php5.6-fpm php5.6-cli php5.6-mcrypt php5.6-gd php5.6-mysq
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-#
-#--------------------------------------------------------------------------
-# Final Touch
-#--------------------------------------------------------------------------
-#
-
-
 
 #
 # Configuration
@@ -46,4 +39,10 @@ CMD ["php-fpm5.6"]
 
 EXPOSE 9000
 
-
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*

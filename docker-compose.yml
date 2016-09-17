@@ -2,13 +2,13 @@ version: '2'
 
 services:
 
-### Core Workspace ###
-    core:
+### Code Box ###
+    codebox:
         build:
-            context: ./docker/core
+            context: ./docker/codebox
             args:
-                - INSTALL_XDEBUG=false
                 - INSTALL_DRUSH=false
+                - INSTALL_RUNNER=false #enable this for sonar runner
                 - PUID=1000
                 - PGID=1000
         volumes_from:
@@ -22,15 +22,13 @@ services:
     php-fpm:
         build:
             context: ./docker/php-fpm/php56
-#            context: ./php-fpm/php7
-#            args:
-#                - INSTALL_XDEBUG=true
+#            context: ./docker/php-fpm/php7
         volumes_from:
             - volumes_source
         expose:
             - "9000"
         links:
-            - core
+            - codebox
 
 #### Apache ###
 
@@ -70,7 +68,7 @@ services:
 
     mysql:
         build:
-            context: ./docker/mysql/5.6
+            context: ./docker/mysql/5.7
         volumes_from:
             - volumes_data
         ports:
@@ -81,15 +79,33 @@ services:
             MYSQL_PASSWORD: 1234maju
             MYSQL_ROOT_PASSWORD: 1234maju
 
+### Sonarqube###
+
+    sonarqube:
+        build:
+            context: ./docker/sonar
+        ports:
+            - "9000:9000"
+        links:
+            - mysql
+        environment:
+            - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+            - SONARQUBE_JDBC_USERNAME=maju
+            - SONARQUBE_JDBC_PASSWORD=1234maju
+        restart: always
+
+    lamp:
+        image: tianon/true
+        depends_on:
+            - php-fpm
+            - apache2
+            - mysql
 #### Web source ###
 
     volumes_source:
         image: tianon/true
         volumes:
             - ../:/var/www/
-            # Demonstration of how to mount multiple sites
-            # - ../../site_a/:/var/www/site_a
-            # - ../../site_b/:/var/www/site_b
 
 ###  Data source ###
 
@@ -97,7 +113,18 @@ services:
         image: tianon/true
         volumes:
             - ./data/mysql:/var/lib/mysql
-            - ./data/memcached:/var/lib/memcached
-            - ./data/redis:/data
             - ./data/sessions:/sessions
+            - ./data/sonarqube:/opt/sonarqube
 
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_ARBITRARY=1
+        restart: always
+        ports:
+            - 8181:80
+        volumes_from:
+            - volumes_data
+        links:
+            - mysql

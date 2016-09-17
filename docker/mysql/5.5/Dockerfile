@@ -1,6 +1,5 @@
-FROM phusion/baseimage:latest
+FROM ubuntu:16.04
 
-RUN ls
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
@@ -78,3 +77,11 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 3306
 CMD ["mysqld"]
+
+# cleanup
+USER root
+RUN apt-get clean && \
+	rm -rfv \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/*
