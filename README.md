@@ -7,9 +7,10 @@ docker-phpdev helps you to setup a php development environment using Docker
 	- nginx
 	- php [5.6 & 7.0]
 	- phpmyadmin
-	- Sonarqube
-
-
+	- sonarqube
+	- redis
+	- memcached
+	- mailcatcher
 
 ###### # Setup LAMP environment
 ```
