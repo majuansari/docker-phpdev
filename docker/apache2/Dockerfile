@@ -70,4 +70,3 @@ RUN apt-get clean && \
 	/var/lib/apt/lists/* \
 	/var/tmp/*
 
-RUN ls /var/php/

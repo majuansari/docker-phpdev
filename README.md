@@ -22,6 +22,7 @@ docker-compose up -d lamp
 
 //Start lamp environment by specifying services
 docker-compose up -d mysql apache2 php-fpm
+
 ```
 
 
@@ -35,6 +36,10 @@ docker-compose up -d lemp
 //Start lamp environment by specifying services
 docker-compose up -d mysql nginx php-fpm
 ```
+
+###### # Add vhosts
+
+For adding vhosts create conf files in docker/apache2/conf for apache2 and docker/nginx/sites for nginx
 
 
 ### Editing docker-compose.yml
@@ -121,6 +126,9 @@ nginx | docker-compose up -d nginx |
 mysql | docker-compose up -d mysql |
 sonarqube | docker-compose up -d sonarqube |
 phpmyadmin | docker-compose up -d phpmyadmin |
+redi | docker-compose up -d redis |
+mailcatcher | docker-compose up -d mailcatcher |
+memcached | docker-compose up -d memcached |
 lamp | docker-compose up -d lamp |
 lemp | docker-compose up -d lemp |
 
