@@ -39,8 +39,7 @@ docker-compose up -d mysql nginx php-fpm
 
 ###### # Add vhosts
 
-For adding vhosts create conf files in docker/apache2/conf for apache2 and docker/nginx/sites for nginx
-
+> For adding vhosts create conf files in *docker/apache2/conf* for apache2 and *docker/nginx/sites* for nginx
 
 ### Editing docker-compose.yml
 
