@@ -1,7 +1,7 @@
 
 docker-phpdev helps you to setup a php development environment using Docker
 
-### Supported Containers
+### Containers
 	- mysql[5.5, 5.6 & 5.7]
 	- apache2
 	- nginx
