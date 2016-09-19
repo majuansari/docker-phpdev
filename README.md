@@ -142,3 +142,11 @@ docker-compose up {container}  | Start just the specified container
 docker-compose stop | Stop all the containers related to the docker-compose
 
 ![alt tag](https://raw.githubusercontent.com/majuansari/docker-phpdev/master/docker-useful-commands.png)
+
+###### References
+
+1. [Docker for php developers](http://www.newmediacampaigns.com/blog/docker-for-php-developers)
+2. [PHP Web development with docker](http://mmenozzi.github.io/2016/01/22/php-web-development-with-docker/)
+3. [webdevops docker](https://github.com/webdevops/Dockerfile)
+4. [laradock](https://github.com/LaraDock/laradock)
+5. [ php-dockerized](https://github.com/kasperisager/php-dockerized)
