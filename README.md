@@ -134,4 +134,4 @@ docker-compose up -d | Start the entire stack
 docker-compose up {container}  | Start just the specified container
 docker-compose stop | Stop all the containers related to the docker-compose
 
-[[https://github.com/majuansari/docker-phpdev/blob/master/docker-useful-commands.png|alt=docker-useful-commands]] 
+![alt tag](https://raw.githubusercontent.com/majuansari/docker-phpdev/master/docker-useful-commands.png)
