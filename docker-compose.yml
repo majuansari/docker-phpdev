@@ -109,14 +109,14 @@ services:
         links:
             - mysql
 
-
 ### Mailcatcher ###
 
     mailcatcher:
         build:
             context: ./docker/mailcatcher
+        ports:
+            - 1080:1080
         restart: always
-
 
 ### Redis ###
 
@@ -124,7 +124,8 @@ services:
         build:
             context: ./docker/redis
         restart: always
-
+        volumes_from:
+            - volumes_data
 ### Memcached ###
 
     memcached:
