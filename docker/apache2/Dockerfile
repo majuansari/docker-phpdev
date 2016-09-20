@@ -36,10 +36,8 @@ RUN a2dismod mpm_event && \
 
 
 ARG WEB_DOCUMENT_ROOT="/var/www/"
-ENV APACHE_WEB_DOCUMENT_ROOT = $WEB_DOCUMENT_ROOT
 
 ARG PHP_SOCKET="php-fpm:9000"
-ENV APACHE_WEB_PHP_SOCKET=$PHP_SOCKET
 
 #
 # Enabling vhosts
@@ -53,18 +51,12 @@ RUN a2ensite *
 #
 ENV DEBIAN_FRONTEND=
 
-RUN echo "export APACHE_WEB_PHP_SOCKET='php-fpm:9000'" >> "/etc/apache2/envvars"
-RUN echo "export APACHE_WEB_DOCUMENT_ROOT='/var/www'" >> "/etc/apache2/envvars"
+RUN echo "export APACHE_WEB_PHP_SOCKET='$PHP_SOCKET'" >> "/etc/apache2/envvars"
+RUN echo "export APACHE_WEB_DOCUMENT_ROOT='$WEB_DOCUMENT_ROOT'" >> "/etc/apache2/envvars"
 
 #
 # Command
 #
-
-
-#
-# Command
-#
-
 WORKDIR /var/www/
 COPY ./apache2-foreground /usr/local/bin/
 CMD ["apache2-foreground"]

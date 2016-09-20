@@ -7,28 +7,30 @@ services:
         build:
             context: ./docker/codebox
             args:
-                - INSTALL_DRUSH=false
-                - INSTALL_RUNNER=false #enable this for sonar runner
-                - PUID=1000
-                - PGID=1000
+                - INSTALL_DRUSH=${INSTALL_DRUSH}
+                - INSTALL_RUNNER=${INSTALL_RUNNER} #enable this for sonar runner
+                - PUID=${PUID}
+                - PGID=${PGID}
         volumes_from:
             - volumes_source
         ports:
            - "22:22"
         tty: true
+        env_file: .env
 
 ### PHP-FPM  ###
 
     php-fpm:
         build:
-            context: ./docker/php-fpm/php56
-#            context: ./docker/php-fpm/php7
+            context: ./docker/php-fpm/${PHP_VERSION}
         volumes_from:
             - volumes_source
         expose:
             - "9000"
         links:
             - codebox
+        env_file: .env
+
 
 #### Apache ###
 
@@ -36,8 +38,8 @@ services:
         build:
             context: ./docker/apache2
             args:
-                - PHP_SOCKET="php-fpm:9000"
-                - WEB_DOCUMENT_ROOT="/var/www/"
+                - PHP_SOCKET=${PHP_SOCKET}
+                - WEB_DOCUMENT_ROOT=${WEB_DOCUMENT_ROOT}
         volumes_from:
             - volumes_source
         volumes:
@@ -47,6 +49,7 @@ services:
             - "443:443"
         links:
             - php-fpm
+        env_file: .env
 
 #### Nginx ####
 
@@ -54,7 +57,7 @@ services:
         build:
             context: ./docker/nginx
             args:
-                - PHP_UPSTREAM=php-fpm:9000
+                - PHP_UPSTREAM=${PHP_UPSTREAM}
         volumes_from:
             - volumes_source
         volumes:
@@ -64,20 +67,19 @@ services:
             - "444:443"
         links:
             - php-fpm
+        env_file: .env
+
 ### MySQL ###
 
     mysql:
         build:
-            context: ./docker/mysql/5.7
+            context: ./docker/mysql/${MYSQL_VERSION}
         volumes_from:
             - volumes_data
         ports:
             - "3306:3306"
-        environment:
-            MYSQL_DATABASE: test
-            MYSQL_USER: maju
-            MYSQL_PASSWORD: 1234maju
-            MYSQL_ROOT_PASSWORD: 1234maju
+        env_file: .env
+
 
 ### Sonarqube###
 
@@ -88,10 +90,7 @@ services:
             - "9000:9000"
         links:
             - mysql
-        environment:
-            - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
-            - SONARQUBE_JDBC_USERNAME=maju
-            - SONARQUBE_JDBC_PASSWORD=1234maju
+        env_file: .env
         restart: always
 
 ### Phpmyadmin ###
