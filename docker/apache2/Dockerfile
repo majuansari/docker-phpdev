@@ -60,7 +60,14 @@ RUN echo "export APACHE_WEB_DOCUMENT_ROOT='/var/www'" >> "/etc/apache2/envvars"
 # Command
 #
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+#
+# Command
+#
+
+WORKDIR /var/www/
+COPY ./apache2-foreground /usr/local/bin/
+CMD ["apache2-foreground"]
 
 # cleanup
 USER root
