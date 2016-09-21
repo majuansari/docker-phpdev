@@ -35,7 +35,6 @@ WORKDIR /var/www/
 CMD ["php-fpm7.0"]
 
 EXPOSE 9000
-
 # cleanup
 USER root
 RUN apt-get clean && \
