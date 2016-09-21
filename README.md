@@ -53,81 +53,11 @@ docker-compose up -d mysql nginx php-fpm
 
 > For adding vhosts create conf files in *docker/apache2/conf* for apache2 and *docker/nginx/sites* for nginx
 
-### Editing docker-compose.yml
+###### # Configure services versions and passwords
 
-###### # Change php versions
-
-
-```
-\\php 5.6 setting
-     php-fpm:
-        build:
-            context: ./docker/php-fpm/php56
-        volumes_from:
-            - volumes_source
-        expose:
-            - "9000"
-        links:
-            - codebox
-
-\\For changing to php 7.0 setting change the context value as below
-    php-fpm:
-        build:
-            context: ./docker/php-fpm/php7
-        volumes_from:
-            - volumes_source
-        expose:
-            - "9000"
-        links:
-            - codebox
-
-```
-###### # Change mysql versions
-```
-\\mysql 5.6 configuration
-    mysql:
-        build:
-            context: ./docker/mysql/5.6
-        volumes_from:
-            - volumes_data
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: test
-            MYSQL_USER: maju
-            MYSQL_PASSWORD: 1234maju
-            MYSQL_ROOT_PASSWORD: 1234maju
+> You can easily change service versions or default passwords by editing .env file
 
 
-\\For changing to mysql5.7  change the context value as below
-    mysql:
-        build:
-            context: ./docker/mysql/5.7
-        volumes_from:
-            - volumes_data
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: test
-            MYSQL_USER: maju
-            MYSQL_PASSWORD: 1234maju
-            MYSQL_ROOT_PASSWORD: 1234maju
-
-\\For changing to mysql5.5  change the context value as below
-    mysql:
-        build:
-            context: ./docker/mysql/5.5
-        volumes_from:
-            - volumes_data
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: test
-            MYSQL_USER: maju
-            MYSQL_PASSWORD: 1234maju
-            MYSQL_ROOT_PASSWORD: 1234maju
-
-```
 
 Container  | Command   |
 ---------- | ---------- |
