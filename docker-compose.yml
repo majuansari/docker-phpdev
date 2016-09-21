@@ -154,7 +154,7 @@ services:
     volumes_source:
         image: tianon/true
         volumes:
-            - ../:/var/www/
+            - ${HOST_APP_DIRECTORY}:/var/www/
 
 ###  Data source ###
 
