@@ -29,14 +29,18 @@ RUN apt-get update && \
 #
 
 # Install "PHP Extentions", "libraries", "Software's"
-RUN apt-get install -y --force-yes --no-install-recommends \
+RUN     apt-get update && \
+		apt-get install -y  --no-install-recommends \
         php7.0-cli \
         php7.0-curl \
+        php7.0-mysql \
+        php7.0-pgsql \
+        php7.0-sqlite \
+        php7.0-sqlite3 \
         git \
         curl \
         vim \
         nano \
-        nodejs\
         npm\
         wget\
         zip \
