@@ -8,7 +8,7 @@ docker-phpdev helps you to setup a php development environment using Docker
 - Easy setup of lemp & lamp environments
 - Easy vhost setup
 - Try out multiple versions of php & mysql
-- Usefull softwares and extensions added
+- Useful services and extensions added
 - Low size containers
 - Only ubuntu 16.04 or alpine are used as base images
 ```
@@ -17,7 +17,7 @@ docker-phpdev helps you to setup a php development environment using Docker
 	- mysql[5.5, 5.6 & 5.7]
 	- apache2
 	- nginx
-	- php [5.6 & 7.0]
+	- php [5.6, 7.0 & 7.1]
 	- phpmyadmin
 	- sonarqube
 	- redis
