@@ -80,6 +80,16 @@ services:
             - "3306:3306"
         env_file: .env
 
+### PG ###
+
+    pg:
+        build:
+            context: ./docker/postgres/${PG_VERSION}
+        volumes_from:
+            - volumes_data
+        ports:
+            - "5432:5432"
+        env_file: .env
 
 ### Sonarqube###
 
@@ -162,6 +172,7 @@ services:
         image: tianon/true
         volumes:
             - ./data/mysql:/var/lib/mysql
+            - ./data/postgres:/var/lib/postgresql/data
             - ./data/sessions:/sessions
             - ./data/sonarqube:/opt/sonarqube
             - ./data/memcached:/var/lib/memcached
