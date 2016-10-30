@@ -14,7 +14,7 @@ docker-phpdev helps you to setup a php development environment using Docker
 ```
 
 ### Containers
-	- mysql[5.5, 5.6 & 5.7]
+	- mysql[5.5, 5.6, 5.7 & 8.0 DR]
 	- apache2
 	- nginx
 	- php [5.6, 7.0 & 7.1]
@@ -42,10 +42,10 @@ docker-compose up -d mysql apache2 php-fpm
 ```
 git clone https://github.com/majuansari/docker-phpdev.git
 cd docker-phpdev
-//Start lamp environment using short key
+//Start lemp environment using short key
 docker-compose up -d lemp
 
-//Start lamp environment by specifying services
+//Start lemp environment by specifying services
 docker-compose up -d mysql nginx php-fpm
 ```
 
